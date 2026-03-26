@@ -1,0 +1,5 @@
+ENPM634{stored_xss_html_upload}
+ENPM634{ssti_username_rce}
+ENPM634{sql_injection_search_bypass}
+ENPM634{path_traversal_flag_read}
+ENPM634{admin_api_broken_access_control}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Search — PasteBoard{% endblock %}
+{% block content %}
+  <h1>Search Pastes</h1>
+  <form method="GET" action="{{ url_for('main.search') }}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by title..." autofocus>
+    <button type="submit">Search</button>
+  </form>
+  {% if query %}
+    {% if results %}
+      {% for row in results %}
+        <article>
+          <header>
+            <h3><a href="{{ url_for('main.view_paste', paste_id=row[0]) }}">{{ row[1] }}</a></h3>
+            <p><kbd>{{ row[3] }}</kbd></p>
+          </header>
+          <pre><code>{{ row[2] }}</code></pre>
+        </article>
+      {% endfor %}
+    {% else %}
+      <p>No results for "{{ query }}".</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

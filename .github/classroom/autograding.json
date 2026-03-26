@@ -1,0 +1,64 @@
+{
+  "tests": [
+    {
+      "name": "Smoke Test",
+      "setup": "pip install requests",
+      "run": "bash .github/scripts/run-test.sh smoke",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 120,
+      "points": 10
+    },
+    {
+      "name": "Vulnerability 1",
+      "setup": "",
+      "run": "bash .github/scripts/run-test.sh vuln 1",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 18
+    },
+    {
+      "name": "Vulnerability 2",
+      "setup": "",
+      "run": "bash .github/scripts/run-test.sh vuln 2",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 18
+    },
+    {
+      "name": "Vulnerability 3",
+      "setup": "",
+      "run": "bash .github/scripts/run-test.sh vuln 3",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 18
+    },
+    {
+      "name": "Vulnerability 4",
+      "setup": "",
+      "run": "bash .github/scripts/run-test.sh vuln 4",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 18
+    },
+    {
+      "name": "Vulnerability 5",
+      "setup": "",
+      "run": "bash .github/scripts/run-test.sh vuln 5",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 18
+    }
+  ]
+}

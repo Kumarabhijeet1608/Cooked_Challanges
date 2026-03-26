@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Pastes — PasteBoard{% endblock %}
+{% block content %}
+  <h1>Recent Pastes</h1>
+  {% if current_user.is_authenticated %}
+    <p><a href="{{ url_for('main.new_paste') }}" role="button">+ New Paste</a></p>
+  {% endif %}
+  {% if pastes %}
+    {% for paste in pastes %}
+      <article>
+        <header>
+          <hgroup>
+            <h3><a href="{{ url_for('main.view_paste', paste_id=paste.id) }}">{{ paste.title }}</a></h3>
+            <p>by {{ paste.author.username }} &middot; <kbd>{{ paste.language }}</kbd></p>
+          </hgroup>
+        </header>
+        <pre><code>{{ paste.body }}</code></pre>
+        {% if current_user.is_authenticated and current_user.id == paste.user_id %}
+          <footer>
+            <form method="POST" action="{{ url_for('main.delete_paste', paste_id=paste.id) }}" style="display:inline;">
+              <button type="submit" class="outline secondary" onclick="return confirm('Delete this paste?')">Delete</button>
+            </form>
+          </footer>
+        {% endif %}
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No pastes yet. Be the first to share a snippet!</p>
+  {% endif %}
+{% endblock %}

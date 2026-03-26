@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Reset Password — PasteBoard{% endblock %}
+{% block content %}
+  <article style="max-width: 450px; margin: 0 auto;">
+    <h1>Reset Password</h1>
+    <form method="POST">
+      <label for="password">Current password</label>
+      <input type="password" id="password" name="password" required autofocus>
+      <label for="new password">New password</label>
+      <input type="password" id="new password" name="new password" required>
+      <label for="confirm password">Confirm new password</label>
+      <input type="password" id="confirm password" name="confirm password" required>
+      <button type="submit">Change Password</button>
+    </form>
+  </article>
+{% endblock %}

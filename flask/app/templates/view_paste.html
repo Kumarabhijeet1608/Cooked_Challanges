@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ paste.title }} — PasteBoard{% endblock %}
+{% block content %}
+  <article>
+    <header>
+      <hgroup>
+        <h2>{{ paste.title }}</h2>
+        <p>by {{ paste.author.username }} &middot; <kbd>{{ paste.language }}</kbd></p>
+      </hgroup>
+    </header>
+    <pre><code>{{ paste.body }}</code></pre>
+    {% if current_user.id == paste.user_id %}
+      <footer>
+        <form method="POST" action="{{ url_for('main.delete_paste', paste_id=paste.id) }}" style="display:inline;">
+          <button type="submit" class="outline secondary" onclick="return confirm('Delete this paste?')">Delete</button>
+        </form>
+      </footer>
+    {% endif %}
+  </article>
+  <p><a href="{{ url_for('main.index') }}">← Back</a></p>
+  <h3>Comments</h3>
+  {% if comments %}
+    {% for c in comments %}
+      <article>
+        <header><strong>{{ c.posted_by }}</strong></header>
+        <p>{{ c.content }}</p>
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No comments yet.</p>
+  {% endif %}
+  <form method="POST" action="{{ url_for('main.add_comment', paste_id=paste.id) }}">
+    <label for="body">Leave a comment</label>
+    <textarea id="body" name="body" rows="3" placeholder="Write a comment..."></textarea>
+    <button type="submit">Post Comment</button>
+  </form>
+{% endblock %}

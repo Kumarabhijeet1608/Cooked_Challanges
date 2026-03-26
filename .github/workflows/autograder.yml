@@ -1,0 +1,47 @@
+name: Autograder
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install script dependencies
+        run: pip install requests
+
+      - name: Smoke test — build and verify app
+        run: bash .github/scripts/run-test.sh smoke
+
+      - name: Vulnerability 1
+        run: bash .github/scripts/run-test.sh vuln 1
+
+      - name: Vulnerability 2
+        run: bash .github/scripts/run-test.sh vuln 2
+
+      - name: Vulnerability 3
+        run: bash .github/scripts/run-test.sh vuln 3
+
+      - name: Vulnerability 4
+        run: bash .github/scripts/run-test.sh vuln 4
+
+      - name: Vulnerability 5
+        run: bash .github/scripts/run-test.sh vuln 5
+
+      - name: Teardown
+        if: always()
+        run: |
+          for dir in flask php nodejs wordpress; do
+            if [ -f "$dir/docker-compose.yml" ]; then
+              docker compose -f "$dir/docker-compose.yml" down -v 2>/dev/null || true
+              break
+            fi
+          done

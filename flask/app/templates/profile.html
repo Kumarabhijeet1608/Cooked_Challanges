@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }}'s Profile — PasteBoard{% endblock %}
+{% block content %}
+  <header style="text-align: center; margin-bottom: 2rem;">
+    {{ greeting | safe }}
+  </header>
+
+  <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+    <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=random"
+         alt="Avatar" style="border-radius: 50%; width: 100px;">
+    <section>
+      <hgroup><h1>{{ user.username }}</h1></hgroup>
+      {% if current_user.id == user.id %}
+        <a href="{{ url_for('auth.reset_password') }}" class="secondary">Reset Password</a>
+      {% endif %}
+    </section>
+  </div>
+
+  <section id="bio-area" style="margin-bottom: 3rem;">
+    {% if bio %}
+      <article>
+        <header><strong>About Me</strong></header>
+        <p>{{ bio }}</p>
+      </article>
+    {% endif %}
+    {% if current_user.id == user.id %}
+      <details>
+        <summary role="button" class="outline secondary">
+          {% if bio %}Edit Bio{% else %}Add Bio{% endif %}
+        </summary>
+        <form action="{{ url_for('main.edit_bio') }}" method="POST" style="margin-top: 1rem;">
+          <textarea name="bio" placeholder="Describe yourself..." rows="3">{{ bio if bio else '' }}</textarea>
+          <button type="submit" class="small">Save Bio</button>
+        </form>
+      </details>
+    {% endif %}
+  </section>
+
+  {% for paste in pastes %}
+    <article>
+      <header>
+        <hgroup>
+          <h3>{{ paste.title }}</h3>
+          <p>by {{ paste.author.username }} &middot; <kbd>{{ paste.language }}</kbd></p>
+        </hgroup>
+      </header>
+      <pre><code>{{ paste.body }}</code></pre>
+      {% if current_user.is_authenticated and current_user.id == paste.user_id %}
+        <footer>
+          <form method="POST" action="{{ url_for('main.delete_paste', paste_id=paste.id) }}" style="display:inline;">
+            <button type="submit" class="outline secondary" onclick="return confirm('Delete this paste?')">Delete</button>
+          </form>
+        </footer>
+      {% endif %}
+    </article>
+  {% endfor %}
+{% endblock %}

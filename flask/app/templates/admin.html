@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — PasteBoard{% endblock %}
+{% block content %}
+  <h1>Admin Dashboard</h1>
+
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+    <article style="text-align: center;">
+      <h2>{{ user_count }}</h2>
+      <p>Total Users</p>
+    </article>
+    <article style="text-align: center;">
+      <h2>{{ paste_count }}</h2>
+      <p>Total Pastes</p>
+    </article>
+  </div>
+
+  <article>
+    <header><strong>User Management API</strong></header>
+    <p>Use the admin API to manage users programmatically:</p>
+    <pre><code>GET /admin/users?api_key=YOUR_KEY</code></pre>
+    <p class="secondary">API key is available to authenticated admin sessions only.</p>
+  </article>
+
+  <!-- Internal: dashboard JS config for admin widgets
+       TODO: move API key to server-side session before Phase 2 deployment
+       api_key: {{ api_key }}
+  -->
+
+{% endblock %}

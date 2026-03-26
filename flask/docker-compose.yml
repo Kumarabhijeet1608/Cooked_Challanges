@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    ports:
+      - "80:5000"
+    environment:
+      - FLASK_ENV=development
+      - SECRET_KEY=change-me-in-production
+      - DATABASE_URL=sqlite:////app/data/app.db
+      # --- Vuln 1: Stored XSS via HTML upload preview ---
+      - FLAG_UPLOAD=ENPM634{stored_xss_html_upload}
+      # --- Vuln 2: SSTI via username in profile greeting ---
+      - FLAG_SSTI=ENPM634{ssti_username_rce}
+      # --- Vuln 3: SQL injection in search ---
+      - FLAG_SQLI=ENPM634{sql_injection_search_bypass}
+      # --- Vuln 4: Path traversal via download endpoint ---
+      - FLAG_PATHTRAVERSAL=ENPM634{path_traversal_flag_read}
+      # --- Vuln 5: Broken access control on admin API ---
+      - FLAG_BAC=ENPM634{admin_api_broken_access_control}
+    volumes:
+      - db_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  db_data:

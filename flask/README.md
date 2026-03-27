@@ -1,92 +1,82 @@
-# PasteBoard — Team 2
+# PasteBoard -- Team 2
 
-A code-sharing web application built with Flask. Users can create, search, and comment on code pastes, upload files, manage their profiles, and admins can manage users from a dashboard.
+A code-sharing web app built with Flask. Users create and share code snippets, search through pastes, upload files, and manage their profiles. Admins get a separate dashboard for managing users.
 
 ## Stack
 
-- **Language**: Python 3.12
-- **Framework**: Flask 3 + Flask-Login + Flask-SQLAlchemy
-- **Database**: SQLite (default)
-- **Port**: 80
+- Python 3.12
+- Flask 3.0.3, Flask-Login, Flask-SQLAlchemy
+- SQLite (file-based, auto-created on first boot)
+- Runs in Docker on port 80 (configurable in docker-compose.yml)
 
-## Quickstart
+## Running It
 
 ```bash
 cd flask
 docker compose up -d --build
 ```
 
-Open [http://localhost](http://localhost) in your browser, register an account, and start sharing code.
+Go to http://localhost, register an account, and you're in.
 
 ## Accounts
 
-The admin account is seeded on first boot with a **random password** (no default creds). Register a new account via the registration page to use the app.
+The admin account is seeded on first boot:
+
+- Username: `admin`
+- Password: `supercalifragilisticexpialidociousandthequickbrownfoxjumpsoverthelazydog`
+- Role: admin
+
+Register a new account through `/register` for a regular user.
 
 ## Features
 
-### 1. Paste Management (Template Baseline)
+### Template Baseline
 - Create, view, and delete code pastes
-- Syntax language tagging (Python, JavaScript, HTML, SQL, etc.)
-- **Private pastes** — toggle visibility so only the author can see them
-- Public pastes appear on the homepage for all users
+- Syntax language tagging (Python, JS, HTML, SQL, etc.)
+- Private pastes that only the author can see
+- User registration, login, logout
 
-### 2. Search
-- Full-text search across paste titles
-- Results link directly to the paste detail page
+### Added Features
 
-### 3. Comment System
-- Post comments on any paste
-- Comments display the author's username and content
-- Supports rich text formatting in comments
+**1. Search**
+Full-text search across paste titles. Results link back to the paste detail page. Located at `/search`.
 
-### 4. File Upload & Viewer
-- Upload files to the server
-- View uploaded file contents directly in the browser
-- Supports text-based files (code, configs, notes, etc.)
+**2. Comment System**
+Any logged-in user can post comments on pastes. Comments show the author's username and are displayed below the paste body on the detail page.
 
-### 5. User Profiles with Editable Bio
-- Profile page shows avatar, username, role, and bio
-- Edit bio from the profile settings page
-- Bio preview renders dynamic content with template variables
-- Password reset from the profile page
+**3. File Upload and Viewer**
+Upload files through `/upload`. View uploaded file contents in-browser at `/uploads/<filename>`. HTML files get rendered as a preview; everything else shows as plaintext. There's also a download API at `/download?file=<name>`.
 
-### 6. Admin Dashboard
-- User management panel (view all users, delete accounts)
-- System statistics (user count, paste count, comment count)
-- REST API for dashboard data (`/admin/users`)
-- Restricted to admin-role users via the navigation menu
+**4. User Profiles with Editable Bio**
+Every user gets a profile page at `/profile/<username>` showing their avatar, username, and bio. Users can edit their bio from the profile page. A password reset form is available from the profile as well.
+
+**5. Admin Dashboard with API**
+Admin users can access `/admin` to see system stats (user count, paste count). The dashboard includes a user management API at `/admin/users` that returns user data as JSON. There's also a settings API at `/api/profile/settings` that accepts JSON updates for user preferences.
 
 ## File Structure
 
 ```
 flask/
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── .env.example
-└── app/
-    ├── __init__.py           # App factory, DB init, seed data
-    ├── models.py             # SQLAlchemy models (User, Paste, Comment, Secret)
-    ├── routes.py             # All URL handlers (main + auth blueprints)
-    └── templates/
-        ├── base.html         # Shared layout with nav bar
-        ├── index.html        # Homepage with recent pastes
-        ├── login.html        # Login form
-        ├── register.html     # Registration form
-        ├── paste_form.html   # New paste form with privacy toggle
-        ├── view_paste.html   # Single paste view + comment section
-        ├── search.html       # Search form and results
-        ├── upload.html       # File upload form
-        ├── view_file.html    # Uploaded file content display
-        ├── profile.html      # User profile page
-        ├── edit_profile.html # Bio editor form
-        ├── reset.html        # Password reset form
-        └── admin.html        # Admin dashboard with user table
+    Dockerfile
+    docker-compose.yml
+    requirements.txt
+    entrypoint.sh
+    seed_db.py
+    app/
+        __init__.py          # app factory, db init
+        models.py            # User, Paste, Comment models
+        routes.py            # all route handlers (main + auth blueprints)
+        templates/
+            base.html        # shared layout with nav
+            index.html       # homepage with recent pastes
+            login.html       # login form
+            register.html    # registration form
+            paste_form.html  # new paste form
+            view_paste.html  # single paste view + comments
+            search.html      # search form and results
+            upload.html      # file upload form
+            view_file.html   # uploaded file content display
+            profile.html     # user profile page
+            reset.html       # password reset form
+            admin.html       # admin dashboard
 ```
-
-## Contribution Statement
-
-- **Priyanka**: Built the initial features — paste viewing, search, comments, file upload/download. Set up the Flask template structure and tested all features.
-- **Shakthi**: Added user profile page, password reset functionality, private paste toggle feature. Tested and integrated on top of Priyanka's work.
-- **Abhijeet**: Designed and implemented the 5 intentional vulnerabilities (SQLi, XSS, SSTI, path traversal, broken access control). Built the admin dashboard, secret table seeding, solve scripts, disclosure document, and README. Code review and Docker testing.
-- **Nishki**: Assisted with vulnerability design discussions, testing, and documentation review.
